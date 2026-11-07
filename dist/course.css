@@ -1,0 +1,47 @@
+/* A reading surface within the pixel interface. */
+#guide{width:min(1120px,calc(100vw - 48px));max-width:none;height:min(900px,90vh);max-height:90vh;padding:0;overflow:hidden;background:white;border:2px solid #182449;box-shadow:8px 8px 0 #18244950}
+#guide .course-header{height:100px;display:flex;justify-content:space-between;align-items:center;background:#eef1ff;border-bottom:2px solid #182449;padding:20px 30px;box-shadow:none;color:#182449}
+.course-header>div>span{font:700 10px 'Courier New',monospace;letter-spacing:1.1px;color:#475b89}
+#guide .course-header h2{font:700 22px 'Segoe UI',sans-serif;letter-spacing:-.4px;margin:6px 0 0}
+#guide-close{background:white;border:1px solid #8c9ac1;color:#263b6b;font-size:27px;line-height:1;width:36px;height:36px;cursor:pointer}
+.course-layout{display:grid;grid-template-columns:230px minmax(0,1fr);height:calc(100% - 100px)}
+#course-nav{background:#f7f9fe;border-right:1px solid #d8dfef;padding:27px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
+.course-nav-label{font:700 9px 'Courier New',monospace;color:#68748f;padding:0 14px 16px;letter-spacing:.7px}
+#course-nav button{display:flex;align-items:center;gap:11px;padding:12px 11px;text-align:left;background:transparent;border:1px solid transparent;font:500 13px 'Segoe UI',sans-serif;color:#485773;border-radius:4px;cursor:pointer;white-space:normal;line-height:1.5}
+#course-nav button span{font:11px 'Courier New',monospace;color:#697ba1;min-width:18px}
+#course-nav button:hover{background:#edf1fc}
+#course-nav button[aria-current]{background:#e5edff;border-color:#c3d2f6;color:#2047a7;font-weight:650}
+#course-nav button[aria-current] span{color:#2047a7}
+#course-content{overflow-y:auto;padding:35px 46px 30px;scrollbar-gutter:stable;line-height:1.85;font-size:15px;color:#303e58;background:white;min-width:0}
+#course-content:focus{outline:none}
+.chapter-kicker{font:700 10px 'Courier New',monospace;color:#4966a4;letter-spacing:1px;margin-bottom:13px}
+#course-content>h2{font-family:'Segoe UI',sans-serif;font-size:32px;line-height:1.2;letter-spacing:-.7px;color:#182449;margin:0 0 7px}
+.chapter-subtitle{font-size:16px;color:#62708b;margin:0 0 23px!important}
+.chapter-intro{font-size:16px;color:#303f60;line-height:1.9;margin:0 0 29px!important;padding-bottom:25px;border-bottom:1px solid #dce3f0}
+#course-content h3{font-family:'Segoe UI',sans-serif;font-size:18px;line-height:1.4;color:#1e335b;margin:30px 0 12px;letter-spacing:-.2px}
+#course-content h4{font-family:'Segoe UI',sans-serif;font-size:14px;color:#425c86;margin:24px 0 8px}
+#course-content p{margin:11px 0 16px;font-size:inherit;line-height:1.85}
+#course-content strong{color:#1e335b;font-weight:650}
+.course-rule{background:#f1f5ff;border:1px solid #d5dff5;border-left:4px solid #4168cf;padding:18px 23px;margin:25px 0}
+#course-content .course-rule h3{font-size:16px;margin:0 0 10px;color:#20449b}
+#course-content .course-rule p:last-child{margin-bottom:0}
+.course-example{border:1px solid #e4d5b7;background:#fffaf0;padding:22px 25px;margin:28px 0}
+.example-label{font:700 9px 'Courier New',monospace;letter-spacing:1px;color:#8b641e}
+#course-content .course-example h3{font-size:19px;color:#72501c;margin:8px 0 17px}
+.course-example p:last-child{margin-bottom:0!important}
+#course-content .course-warning{display:block;width:auto;background:#f8f9fc;border:0;border-left:3px solid #8090b3;border-radius:0;box-shadow:none;padding:16px 20px;margin:26px 0;overflow:visible}
+#course-content .course-warning strong{font-size:13px;display:block;color:#445a85;margin-bottom:5px}
+#course-content .course-warning p{font-size:14px;margin:3px 0 0}
+.course-takeaway{font-size:14px;background:#eaf1ff;border:1px dashed #a2b7e8;padding:17px 20px;margin-top:26px;color:#28477e}
+.course-math{overflow-x:auto;overflow-y:hidden;margin:16px 0;padding:4px 0;color:#152c60;max-width:100%}
+.course-math .katex-display{margin:.45em 0;text-align:center}.course-math .katex-display>.katex{white-space:nowrap}
+#course-content .katex{font-size:1.13em}#course-content .course-math .katex{font-size:1.2em}
+.notation-list{display:grid;grid-template-columns:1fr 1fr;gap:8px 15px;margin:20px 0 0;font-size:13px}
+#course-content .notation-list p{margin:0;font-size:13px}.notation-list b{display:inline-block;font-style:italic;font-family:Georgia,serif;font-size:19px;color:#2449a0;min-width:23px}
+.lesson-steps{padding-left:23px}.lesson-steps li{padding-left:7px;margin:14px 0}
+.course-key-pair{display:grid;grid-template-columns:1fr 1fr;gap:15px;text-align:center}.course-key-pair>p{padding:15px;border:1px solid #b9caee;background:#fff;font-size:13px!important}.course-key-pair .katex{font-size:1.5em!important}
+.exercise{padding:7px 0 26px;border-bottom:1px solid #dce3f0}.exercise details{font-size:15px;margin-top:17px;background:#f7f9fd;padding:13px 18px;border:1px solid #dce3f0}.exercise summary{font-size:13px;font-weight:650;color:#284fa7}.exercise details[open] summary{margin-bottom:18px}
+.chapter-controls{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:38px;border-top:1px solid #dce3f0;padding-top:22px}.chapter-controls button{background:white;border:1px solid #a3b5db;padding:10px 14px;font-size:12px;font-weight:600;color:#2a4c99;cursor:pointer}.chapter-controls button:hover{background:#eef3ff}.chapter-controls>span{font-size:12px;color:#526b9f}
+.math-equation{overflow-x:auto;overflow-y:hidden;max-width:100%;color:#182f65;font-size:15px}.math-equation .katex-display{margin:.5em 0;text-align:left}.math-equation .katex-display>.katex{text-align:left}.answer .big .math-equation{font-size:21px}.step .math-equation{font-size:14px}.math-equation .katex-display>.katex{white-space:nowrap}
+@media(max-width:850px){#guide{width:calc(100vw - 24px);height:92vh;max-height:92vh}.course-layout{grid-template-columns:190px minmax(0,1fr)}#course-nav{padding:22px 8px}#course-nav button{font-size:12px;gap:7px;padding:11px 8px}#course-content{padding:28px 26px;font-size:14px}#course-content>h2{font-size:27px}.course-rule,.course-example{padding:18px}.chapter-intro{font-size:15px}}
+@media(max-width:600px){#guide{width:calc(100vw - 16px);height:94vh;max-height:94vh}#guide .course-header{height:84px;padding:15px 18px}#guide .course-header h2{font-size:17px;max-width:240px}.course-header>div>span{font-size:8px}.course-layout{height:calc(100% - 84px);display:flex;flex-direction:column}#course-nav{flex-direction:row;flex-shrink:0;padding:10px;gap:6px;overflow-x:auto;overflow-y:hidden;border-right:0;border-bottom:1px solid #d8dfef}.course-nav-label{display:none}#course-nav button{white-space:nowrap;font-size:11px;padding:9px;border-color:#d8dfef}#course-nav button span{font-size:10px;min-width:14px}#course-content{padding:25px 19px;flex:1;min-height:0;font-size:15px;scrollbar-gutter:auto}#course-content>h2{font-size:27px}.chapter-subtitle{font-size:14px}.chapter-intro{font-size:15px}.course-rule,.course-example{padding:17px 14px}.course-math{font-size:13px}#course-content .course-math .katex{font-size:1.15em}.notation-list{grid-template-columns:1fr}.chapter-controls button{font-size:10px;padding:10px}.course-key-pair{gap:8px}.answer .big .math-equation{font-size:18px}}

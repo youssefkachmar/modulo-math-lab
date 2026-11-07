@@ -1,6 +1,6 @@
 /* Pixel lab: strong outlines and game-like frames; ordinary type for maths. */
 :root{--pixel-ink:#182449;--accent:#244edc;--accent-dark:#182449;--bg:#f4f7ff;--ink:#182449;--muted:#495571;--line:#bec8e2;--mono:'Courier New',monospace}
-body{background-color:var(--bg);background-image:linear-gradient(#2746a109 1px,transparent 1px),linear-gradient(90deg,#2746a109 1px,transparent 1px);background-size:24px 24px}
+body{background:#f4f7ff}
 header{background:#fff;color:var(--pixel-ink);border-bottom:3px solid var(--pixel-ink);box-shadow:none}
 .header-inner{height:85px;gap:50px}.brand{font-family:var(--mono);font-weight:900;font-size:31px;letter-spacing:-2px}.brand-sub{font-family:var(--mono);font-size:8px;letter-spacing:1.1px;font-weight:700;color:#465473;margin-top:6px}
 .brand-mark{background:#2854e7;border:2px solid var(--pixel-ink);border-radius:0;width:38px;height:45px;box-shadow:3px 3px 0 var(--pixel-ink);position:relative;display:block;padding:0}.robot-eyes{position:absolute;left:5px;right:5px;top:5px;height:17px;background:#e3f1ff;border:2px solid var(--pixel-ink)}.robot-eyes:before,.robot-eyes:after{content:'';position:absolute;width:3px;height:5px;background:var(--pixel-ink);top:3px}.robot-eyes:before{left:4px}.robot-eyes:after{right:4px}.brand-mark .robot-keys{position:absolute;left:5px;bottom:2px;color:white;letter-spacing:-1px;font-size:20px;font-family:Arial;white-space:nowrap;line-height:1}

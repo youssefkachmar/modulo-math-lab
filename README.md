@@ -1,32 +1,61 @@
-# Modulo — Arithmétique & RSA
+# Modulo — Le labo des nombres
 
-Application pédagogique en français, utilisable directement dans un navigateur.
+Application pédagogique en français. Les algorithmes et le chiffrement RSA sont calculés en **Python** ; le navigateur affiche les formulaires, les explications et les formules.
 
-## Ouvrir
+## Lancer l’application
 
-Double-cliquez sur `dist/index.html`. Aucun compte, serveur ou installation nécessaire. Les calculs et les polices fonctionnent entièrement hors ligne.
+Prérequis : Python 3.10 ou plus récent. Aucune bibliothèque Python à installer.
 
-## Modules
+Sous Windows, double-cliquez sur **Lancer Modulo.bat**.
 
-- Inverse modulaire : PGCD, divisions d’Euclide, coefficients de Bézout, représentant positif et vérification ; méthode d’Euler pour les modules jusqu’à 10¹².
-- Euclide & Bézout : division euclidienne avec reste positif, PGCD, PPCM et coefficients pour des entiers signés.
-- Indicatrice d’Euler : décomposition en facteurs premiers, calcul de φ(n), visualisation des entiers premiers avec n jusqu’à 100.
-- RSA : choix de p, q et e, calcul des clés, chiffrement et déchiffrement de nombres ou de textes UTF-8.
+Ou, dans ce dossier :
 
-Les entiers sont calculés exactement avec BigInt. Les entrées générales acceptent jusqu’à 100 caractères. La factorisation est limitée à 10¹² et les nombres premiers RSA à 10⁶ pour garder les calculs interactifs. Les messages texte sont limités à 500 caractères ; chaque octet est un bloc indépendant, d’où la condition n > 255. Les blocs chiffrés sont séparés par des espaces.
+```powershell
+python app.py --open
+```
 
-RSA est ici une démonstration scolaire sans bourrage cryptographique ; ne pas l’utiliser pour des secrets réels. Aucune donnée saisie n’est envoyée à un serveur.
+Adresse par défaut : http://127.0.0.1:8766. Si ce port est déjà utilisé : `python app.py --port 8767 --open`.
 
-## Vérifier les calculs
+Gardez la fenêtre du serveur ouverte pendant l’utilisation. Ctrl+C arrête le serveur. Ouvrir directement `dist/index.html` permet de lire le cours, mais les calculs nécessitent le serveur Python.
 
-Avec Node.js : `node test.cjs`.
+## Ce que contient l’application
+
+- Inverse modulaire : Euclide étendu, Bézout, représentant positif et vérification.
+- PGCD, PPCM et division euclidienne avec reste positif pour les entiers signés.
+- Indicatrice d’Euler : facteurs premiers, calcul et visualisation.
+- RSA : génération de clés, chiffrement et déchiffrement de nombres ou de textes UTF-8.
+- Carnet de cours : huit chapitres, exemples détaillés, six exercices avec corrections et formules LaTeX rendues avec KaTeX.
+
+Toutes les ressources (illustration, KaTeX, polices) sont locales. Aucun accès Internet n’est nécessaire après le téléchargement. Le serveur écoute uniquement sur votre ordinateur. Les entiers sont transmis au navigateur sous forme de chaînes pour préserver leur précision.
 
 ## Organisation
 
-`dist/math.js` contient les algorithmes, `dist/app.js` les explications et interactions, `dist/style.css` le design et `dist/index.html` la structure. Le bouton « Imprimer la fiche » permet d’imprimer les résultats ou de les enregistrer en PDF via le navigateur.
+- `app.py` : serveur local et API JSON, bibliothèque standard Python.
+- `calculations.py` : algorithmes et validation, indépendants de l’interface.
+- `test_calculations.py` : tests des calculs et des cas limites.
+- `dist/app.js` : navigation et formulaires.
+- `dist/results.js` : appels à Python et mise en forme des résultats.
+- `dist/course.js` : cours et expressions LaTeX, faciles à modifier.
+- `dist/course.css` : mise en page du carnet.
+- `dist/style.css`, `dist/pixel.css` : interface et identité pixel.
+- `dist/vendor/katex/` : moteur de composition mathématique, polices et licence MIT.
 
-## Identité visuelle
+## Vérifier
 
-Le labo utilise un fond quadrillé clair, des fenêtres à contours pixel, des boutons bleus et quatre stations de calcul. `dist/pixel.css` contient ce thème. Les calculs restent lisibles et les animations respectent la préférence de réduction des mouvements.
+```powershell
+python -m unittest test_calculations -v
+```
 
-L’illustration originale `dist/assets/math-lab.png` a été créée avec le générateur d’images intégré. Brief : laboratoire mathématique lumineux en pixel art 16 bits, robot calculatrice bleu, personnage orange tenant une clé, personnage pi violet et coffre RSA ; palette bleu, violet, orange, or et blanc, sans vert ni fond sombre. Les entrées utilisateur ne sont jamais intégrées à l’illustration.
+## Limites pédagogiques
+
+Entrées générales : 100 caractères. Factorisation : n ≤ 10¹². Nombres premiers RSA : p et q ≤ 10⁶. Texte : 500 caractères, encodés en UTF-8 ; chaque octet est chiffré séparément, avec n > 255.
+
+Ce RSA est un modèle scolaire sans bourrage cryptographique. Ne pas l’utiliser pour des secrets réels.
+
+## Versions
+
+La version actuelle utilise Python pour les calculs et comprend le nouveau carnet de cours avec formules LaTeX, ainsi qu’un fond uni. Lancez-la localement avec les instructions ci-dessus.
+
+Les versions précédentes restent disponibles : `v0.1-dashboard` (tableau de bord bleu) et `v0.2-pixel-lab` (premier design pixel approuvé).
+
+Le cours reprend les notions de « Inverse Modulaire et Indicatrice d’Euler » fourni en classe, puis développe l’application à RSA. Documentation du moteur de formules : https://katex.org/docs/browser.

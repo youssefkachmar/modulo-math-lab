@@ -3,3 +3,4 @@ lesson.png
 *.png
 outputs/
 !dist/assets/*.png
+__pycache__/
