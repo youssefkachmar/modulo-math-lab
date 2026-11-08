@@ -6,6 +6,7 @@ import argparse
 import json
 import webbrowser
 from calculations import calculate, json_safe
+from exercises import generate_series
 
 ROOT = Path(__file__).resolve().parent / "dist"
 
@@ -27,7 +28,8 @@ class Handler(SimpleHTTPRequestHandler):
             data = json.loads(self.rfile.read(size))
             if not isinstance(data, dict):
                 raise ValueError("Paramètres invalides.")
-            response = json_safe(calculate(self.path.removeprefix("/api/"), data))
+            operation = self.path.removeprefix("/api/")
+            response = json_safe(generate_series(data) if operation == "exercises" else calculate(operation, data))
             code = 200
         except (ValueError, TypeError, UnicodeError) as error:
             response, code = {"error": str(error)}, 400
