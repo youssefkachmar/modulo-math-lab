@@ -1,4 +1,14 @@
 'use strict';
+// Use the same mathematical typesetting on the station cards and in the course.
+const stationFormulas = [
+ String.raw`a\times x\equiv 1\pmod n`,
+ String.raw`a u+b v=\operatorname{PGCD}(a,b)`,
+ String.raw`\varphi(n)=n\prod_{p\mid n}\left(1-\frac{1}{p}\right)`,
+ String.raw`m\longmapsto c\equiv m^{e}\pmod n`
+];
+document.querySelectorAll('.module-formula').forEach((element,index)=>{
+ katex.render(stationFormulas[index],element,{displayMode:true,throwOnError:true,trust:false});
+});
 // LaTeX is rendered locally. The source remains readable for editing the lesson.
 const I=(s,...v)=>katex.renderToString(String.raw(s,...v),{throwOnError:true,trust:false});
 const D=(s,...v)=>`<div class="course-math">${katex.renderToString(String.raw(s,...v),{displayMode:true,throwOnError:true,trust:false})}</div>`;

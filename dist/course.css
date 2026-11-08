@@ -1,4 +1,11 @@
 /* A reading surface within the pixel interface. */
+.module-formula{display:flex;align-items:center;justify-content:center;min-height:64px;padding:7px 3px}
+.module-formula .katex-display{margin:0;max-width:100%}
+.module-formula .katex{font-size:18px}
+/* Pixel card styles size ordinary spans; restore KaTeX's measured sizes. */
+.module-formula .katex span{font-size:inherit}
+@media(min-width:561px) and (max-width:1100px){.module-formula .katex{font-size:20px}}
+@media(max-width:560px){.module-formula .katex{font-size:19px}}
 #guide{width:min(1120px,calc(100vw - 48px));max-width:none;height:min(900px,90vh);max-height:90vh;padding:0;overflow:hidden;background:white;border:2px solid #182449;box-shadow:8px 8px 0 #18244950}
 #guide .course-header{height:100px;display:flex;justify-content:space-between;align-items:center;background:#eef1ff;border-bottom:2px solid #182449;padding:20px 30px;box-shadow:none;color:#182449}
 .course-header>div>span{font:700 10px 'Courier New',monospace;letter-spacing:1.1px;color:#475b89}
