@@ -85,17 +85,7 @@ function preparePrint(mode) {
  if(!currentSeries) return;
  const key=`${currentSeries.code}:${mode}`;
  if(preparedPrintKey===key) return;
- const correction = mode === 'correction';
- const groups = correction ? currentSeries.exercises.map(ex=>[ex])
-  : currentSeries.exercises.reduce((pages,ex,index)=>{if(index%2===0) pages.push([]);pages[pages.length-1].push(ex);return pages;},[]);
- $('#print-document').innerHTML=groups.map((group,index)=>`<section class="print-page ${correction?'correction-page':''}">
-  <div class="print-header"><strong>modulo</strong><span>${correction?'CORRIGÉ DÉTAILLÉ':'SÉRIE D’EXERCICES'}</span></div>
-  <h1>${correction?'Comprendre chaque étape.':'À vous de jouer.'}</h1>
-  <div class="print-meta">${escapeHTML(currentSeries.level_label)} · ${currentSeries.count} exercices · Série ${escapeHTML(currentSeries.code)}</div>
-  ${correction?'':'<div class="student-line"><span>Nom : ______________________________</span><span>Date : ______________</span></div>'}
-  ${group.map(ex=>`<article class="printed-exercise"><h2>Exercice ${ex.number} · ${escapeHTML(ex.title)}</h2><div class="exercise-block">${blocks(ex.prompt)}</div>${correction?`<div class="printed-solution"><h3>Correction</h3><div class="exercise-block">${blocks(ex.solution)}</div></div>`:`<div class="writing-space" aria-hidden="true">${'<div></div>'.repeat(6)}</div>`}</article>`).join('')}
-  <div class="print-footer"><span>${correction?'Corrigé':'Énoncés'} · ${escapeHTML(currentSeries.code)}</span><span>${index+1} / ${groups.length}</span></div>
- </section>`).join('');
+ $('#print-document').innerHTML=buildPrintDocument(currentSeries,mode);
  preparedPrintKey=key;
 }
 function releasePrint() {
@@ -106,20 +96,11 @@ function releasePrint() {
  $('#print-exercises').disabled=false;
  $('#print-correction').disabled=false;
 }
-async function printSeries(mode) {
- if(!currentSeries || printing || busy) return;
- printing=true;
- $('#print-exercises').disabled=true;
- $('#print-correction').disabled=true;
- try {
-  printMode=mode;
-  preparePrint(mode);
-  await document.fonts.ready;
-  window.print();
- } catch(error) {
-  status('L’impression n’a pas pu démarrer. Réessayez depuis votre navigateur.',true);
-  releasePrint();
- }
+function printSeries(mode) {
+ if(!currentSeries || busy) return;
+ const url=`print.html?mode=${encodeURIComponent(mode)}&code=${encodeURIComponent(currentSeries.code)}`;
+ window.open(url,'_blank','noopener');
+ status('La feuille à imprimer s’ouvre dans un nouvel onglet. Utilisez son bouton Imprimer.');
 }
 $('#print-exercises').addEventListener('click',()=>printSeries('exercises'));
 $('#print-correction').addEventListener('click',()=>printSeries('correction'));

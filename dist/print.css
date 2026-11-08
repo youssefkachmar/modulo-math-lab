@@ -1,0 +1,38 @@
+*{box-sizing:border-box}
+body{margin:0;background:#e9edf4;color:#17233c;font-family:'Segoe UI',Arial,sans-serif}
+.print-toolbar{position:sticky;top:0;background:white;border-bottom:1px solid #bac6dc;padding:14px 24px;display:flex;gap:20px;align-items:center;z-index:2;font-size:13px}
+.print-toolbar button{background:#244edc;color:white;border:0;padding:11px 22px;font:600 13px 'Segoe UI',sans-serif;cursor:pointer}
+.print-toolbar button:disabled{opacity:.5;cursor:wait}
+.print-toolbar a{color:#244edc}
+#print-status{padding:12px 24px;font-size:13px;line-height:1.6}
+#print-document{padding:20px;overflow-x:auto}
+ .print-page{width:182mm;margin:0 auto 20px;background:white;position:relative;min-height:267mm;padding:0 0 12mm;box-sizing:border-box;break-after:page}
+ .print-page:last-child{break-after:auto}
+ .print-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5pt solid #17233c;padding-bottom:3mm}
+ .print-header strong{font:700 20pt 'Courier New',monospace}.print-header span{font:9pt 'Courier New',monospace}
+ .print-page h1{font:700 19pt 'Courier New',monospace;margin:6mm 0 3mm}
+ .print-meta{font-size:8pt;line-height:1.6;margin-bottom:5mm;overflow-wrap:anywhere}
+ .student-line{display:flex;justify-content:space-between;font-size:10pt;padding:3mm 0 5mm;border-bottom:1pt solid #aaa}
+ .printed-exercise{padding-top:6mm;break-inside:avoid}.printed-exercise h2{font-size:11pt;margin:0 0 3mm}
+ .print-page .exercise-block p{font-size:10pt;line-height:1.55;margin:2mm 0;color:#17233c}
+ .print-page .exercise-math{font-size:11pt;overflow:visible;padding:0}
+ .print-page .katex-display{margin:2mm 0}
+ .writing-space{height:53mm;margin:4mm 0 2mm}
+ .writing-space>div{height:8.8mm;border-bottom:.5pt solid #ccd1da}
+ .print-footer{position:absolute;bottom:0;left:0;right:0;border-top:.5pt solid #aaa;padding-top:3mm;display:flex;justify-content:space-between;gap:5mm;font-size:8pt}
+ .printed-solution{border-top:.5pt solid #b4bfd3;margin-top:4mm;padding-top:2mm}
+ .printed-solution h3{font:700 9pt 'Courier New',monospace;color:#17233c;margin:2mm 0}
+ .correction-page .printed-exercise{padding-top:1mm}
+ .correction-page .exercise-block p{font-size:9pt;line-height:1.4;margin:1.6mm 0}
+ .correction-page .exercise-math{font-size:10pt}.correction-page .katex-display{margin:1.5mm 0}
+.exercise-math{margin:2mm 0;overflow-x:auto}
+.exercise-math math{font-family:'Cambria Math','STIX Two Math',math;font-size:1.1em;text-align:left;display:block;margin:0}
+.exercise-math .katex{font:inherit}
+@page{size:A4;margin:14mm}
+@media print{
+ body{background:white}
+ .print-toolbar,#print-status{display:none}
+ #print-document{display:block;padding:0;overflow:visible}
+ .print-page{width:auto;margin:0;box-shadow:none}
+ .exercise-math{overflow:visible}
+}

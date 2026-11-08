@@ -34,6 +34,7 @@ Ouvrez **Les exercices** dans la navigation. Choisissez les thèmes, le niveau e
 - **Imprimer les exercices** prépare une feuille A4 avec deux exercices par page, des espaces de rédaction et aucun corrigé, même si celui-ci est affiché à l’écran.
 - **Afficher le corrigé** révèle les méthodes, les divisions d’Euclide, les coefficients de Bézout et les vérifications.
 - **Imprimer le corrigé** prépare un document séparé avec une correction par page. Le même numéro de série figure sur les deux documents.
+- Les boutons d’impression ouvrent une feuille légère dans un nouvel onglet. Cliquez ensuite sur **Imprimer / PDF**. La feuille utilise les équations natives du navigateur et ne charge pas l’interface du calculateur. Fermez cet onglet après utilisation.
 - Pour créer un PDF, choisissez **Enregistrer au format PDF** dans la fenêtre d’impression. Utilisez A4, échelle 100 %, et désactivez les en-têtes/pieds de page ajoutés par le navigateur si nécessaire.
 - Copiez le numéro `M1-…` pour rouvrir la série via **Retrouver une série**. Il encode les thèmes, la difficulté, le nombre de questions et la graine aléatoire ; aucun compte ni stockage en ligne n’est nécessaire. L’adresse de la page contient également ce numéro.
 
@@ -60,6 +61,8 @@ Toutes les ressources (illustration, KaTeX, polices) sont locales. Aucun accès 
 ```powershell
 python -m unittest test_calculations test_exercises -v
 ```
+
+Le contrôle de la génération des feuilles et de leur complexité s’exécute avec `node test_print.cjs` (Node.js est nécessaire uniquement pour ce test).
 
 ## Limites pédagogiques
 
