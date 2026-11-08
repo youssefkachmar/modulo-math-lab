@@ -93,7 +93,7 @@ function preparePrint(mode) {
   <h1>${correction?'Comprendre chaque étape.':'À vous de jouer.'}</h1>
   <div class="print-meta">${escapeHTML(currentSeries.level_label)} · ${currentSeries.count} exercices · Série ${escapeHTML(currentSeries.code)}</div>
   ${correction?'':'<div class="student-line"><span>Nom : ______________________________</span><span>Date : ______________</span></div>'}
-  ${group.map(ex=>`<article class="printed-exercise"><h2>Exercice ${ex.number} · ${escapeHTML(ex.title)}</h2><div class="exercise-block">${blocks(ex.prompt)}</div>${correction?`<div class="printed-solution"><h3>Correction</h3><div class="exercise-block">${blocks(ex.solution)}</div></div>`:'<div class="writing-space" aria-hidden="true"></div>'}</article>`).join('')}
+  ${group.map(ex=>`<article class="printed-exercise"><h2>Exercice ${ex.number} · ${escapeHTML(ex.title)}</h2><div class="exercise-block">${blocks(ex.prompt)}</div>${correction?`<div class="printed-solution"><h3>Correction</h3><div class="exercise-block">${blocks(ex.solution)}</div></div>`:`<div class="writing-space" aria-hidden="true">${'<div></div>'.repeat(6)}</div>`}</article>`).join('')}
   <div class="print-footer"><span>${correction?'Corrigé':'Énoncés'} · ${escapeHTML(currentSeries.code)}</span><span>${index+1} / ${groups.length}</span></div>
  </section>`).join('');
  preparedPrintKey=key;

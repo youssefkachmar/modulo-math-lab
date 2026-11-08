@@ -17,6 +17,12 @@
 .sheet-actions{display:flex;flex-wrap:wrap;gap:12px}.sheet-actions button{font-size:11px;padding:11px 12px;width:auto;margin:0;line-height:1.5}.print-tip{font-size:11px;color:#63718b;line-height:1.7;margin:17px 0 25px}
 .exercise-card{padding:24px 0;border-top:1px solid #ced8eb;min-width:0}.exercise-card h3{font-size:15px;display:flex;align-items:center;gap:10px;margin:0 0 16px}.exercise-number{font:11px 'Courier New',monospace;border:1px solid #9badcf;background:#f0f4ff;padding:5px 7px;color:#234383}.exercise-block p{font-size:14px;line-height:1.85;color:#344360;margin:10px 0}.exercise-math{overflow-x:auto;overflow-y:hidden;padding:3px 0;max-width:100%;font-size:15px}.exercise-math .katex-display{margin:.6em 0;text-align:left}.exercise-math .katex-display>.katex{text-align:left;white-space:nowrap}.exercise-solution{background:#f5f8ff;border-left:3px solid #4769c3;padding:15px 20px;margin-top:24px}.solution-label{font:700 10px 'Courier New',monospace;color:#244edc;letter-spacing:.7px}.exercise-solution .exercise-block p{font-size:13px}.exercise-solution .exercise-math{font-size:14px}.exercise-app button:disabled{opacity:.55;cursor:wait}.exercise-app :focus-visible{outline:3px solid #e6a321;outline-offset:3px}
 #print-document{display:none}
+/* Keep long correction lists from laying out off-screen formula trees.
+   Screen-only: every exercise must remain fully rendered in print output. */
+@media screen{
+ .exercise-card{content-visibility:auto;contain-intrinsic-size:auto 220px}
+ .exercise-card:has(.exercise-solution:not([hidden])){contain-intrinsic-size:auto 1100px}
+}
 @page{size:A4;margin:14mm}
 @media print{
  html,body{background:white!important;margin:0!important;padding:0!important;color:#17233c!important}
@@ -33,7 +39,8 @@
  .print-page .exercise-block p{font-size:10pt;line-height:1.55;margin:2mm 0;color:#17233c}
  .print-page .exercise-math{font-size:11pt;overflow:visible;padding:0}
  .print-page .katex-display{margin:2mm 0}
- .writing-space{height:53mm;margin:4mm 0 2mm;background:repeating-linear-gradient(to bottom,transparent 0,transparent 8.7mm,#ccd1da 8.7mm,#ccd1da 8.9mm);print-color-adjust:exact}
+ .writing-space{height:53mm;margin:4mm 0 2mm}
+ .writing-space>div{height:8.8mm;border-bottom:.5pt solid #ccd1da}
  .print-footer{position:absolute;bottom:0;left:0;right:0;border-top:.5pt solid #aaa;padding-top:3mm;display:flex;justify-content:space-between;gap:5mm;font-size:8pt}
  .printed-solution{border-top:.5pt solid #b4bfd3;margin-top:4mm;padding-top:2mm}
  .printed-solution h3{font:700 9pt 'Courier New',monospace;color:#17233c;margin:2mm 0}
