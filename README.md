@@ -23,12 +23,13 @@ Gardez la fenêtre du serveur ouverte pendant l’utilisation. Ctrl+C arrête le
 - Inverse modulaire : Euclide étendu, Bézout, représentant positif et vérification.
 - PGCD, PPCM et division euclidienne avec reste positif pour les entiers signés.
 - PPCM : un calculateur dédié, avec la méthode par le PGCD.
-- Congruences : restes des deux entiers et divisibilité de leur différence.
+- Congruences : reste de a modulo n, résolution de ax ≡ b (mod n) avec toutes les solutions, ou comparaison de deux entiers.
+- Exposant facultatif : laisser k vide calcule directement le reste de a modulo n, sans afficher de puissance. Un zéro saisi reste un véritable exposant nul.
 - Fermat et Euler : conditions, réduction de l’exposant et carrés successifs (également sans réduction lorsque les conditions ne sont pas remplies).
 - Indicatrice d’Euler : facteurs premiers, calcul et visualisation.
 - RSA : génération de clés, chiffrement et déchiffrement de nombres ou de textes UTF-8.
 - Carnet de cours : huit chapitres, exemples détaillés, six exercices avec corrections et formules LaTeX rendues avec KaTeX.
-- Séries d’exercices : sept thèmes, trois difficultés, 1 à 20 questions et corrections détaillées générées en Python.
+- Séries d’exercices : huit thèmes, trois difficultés, 1 à 20 questions et corrections détaillées générées en Python.
 
 ## Préparer une série à imprimer
 
@@ -40,6 +41,8 @@ Ouvrez **Les exercices** dans la navigation. Choisissez les thèmes, le niveau e
 - Les boutons ouvrent directement la fenêtre d’impression, sans nouvel onglet. Les équations imprimées utilisent le MathML natif ; la feuille temporaire est libérée après fermeture de la fenêtre.
 - Pour créer un PDF, choisissez **Enregistrer au format PDF** dans la fenêtre d’impression. Utilisez A4, échelle 100 %, et désactivez les en-têtes/pieds de page ajoutés par le navigateur si nécessaire.
 - Copiez le numéro `M1-…` pour rouvrir la série via **Retrouver une série**. Il encode les thèmes, la difficulté, le nombre de questions et la graine aléatoire ; aucun compte ni stockage en ligne n’est nécessaire. L’adresse de la page contient également ce numéro.
+
+Le thème **Équations de congruence** propose des équations ax ≡ b (mod n), avec inverse, simplification par le PGCD ou absence de solution, et un corrigé imprimable. Les anciens numéros de série conservent leurs exercices.
 
 Les difficultés changent la taille des nombres et introduisent des entiers négatifs dans certains exercices Défi. RSA reste scolaire ; la calculatrice est autorisée. Les indices progressifs et la vérification de réponses saisies ne sont pas encore inclus.
 

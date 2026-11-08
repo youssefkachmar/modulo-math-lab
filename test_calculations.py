@@ -5,6 +5,23 @@ from calculations import calculate, extended_gcd, inverse, totient, rsa_keys, js
 
 
 class ArithmeticTests(unittest.TestCase):
+    def test_congruence_equations_and_remainders(self):
+        for a in range(-8,9):
+            for b in range(-8,9):
+                for n in range(2,15):
+                    z=calculate('congruences',dict(mode='solve',a=a,b=b,n=n))
+                    expected={x for x in range(n) if (a*x-b)%n==0}
+                    actual=set(range(z['x'],n,z['modulus'])) if z['solvable'] else set()
+                    self.assertEqual(actual,expected)
+        for a,b,n,x in [(4,5,9,8),(7,2,11,5)]:
+            self.assertEqual(calculate('congruences',dict(mode='solve',a=a,b=b,n=n))['x'],x)
+        for exponent in ['', '   ']:
+            z=calculate('fermat',dict(a=35,n=34,exponent=exponent))
+            self.assertTrue(z['simple'])
+            self.assertEqual(z['r'],1)
+        self.assertEqual(calculate('fermat',dict(a=35,n=34,exponent=0))['value'],1)
+        self.assertEqual(calculate('congruences',dict(mode='remainder',a=-5,n=43))['r'],38)
+
     def test_new_calculators(self):
         for a in range(-10, 11):
             for b in range(-10, 11):

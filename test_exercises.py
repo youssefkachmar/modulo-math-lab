@@ -54,6 +54,10 @@ class SeriesTests(unittest.TestCase):
                             elif topic == "6":
                                 self.assertEqual(a["value"],pow(a["a"],a["exponent"],a["n"]))
                                 self.assertEqual(gcd(a["a"],a["n"]),1)
+                            elif topic == "8":
+                                expected = {x for x in range(a['n']) if (a['a']*x-a['b'])%a['n']==0}
+                                actual = set(range(a['x'],a['n'],a['modulus'])) if a['solvable'] else set()
+                                self.assertEqual(actual,expected)
                             else:
                                 self.assertEqual(a["n"],a["p"]*a["q"])
                                 self.assertEqual(a["e"]*a["d"]%a["t"],1)
@@ -61,7 +65,7 @@ class SeriesTests(unittest.TestCase):
                                 self.assertEqual(a["m"],pow(a["c"],a["d"],a["n"]))
 
     def test_invalid_settings(self):
-        cases = [{"topics":[]},{"topics":["8"]},{"topics":"1"},{"topics":[{}]},
+        cases = [{"topics":[]},{"topics":["9"]},{"topics":"1"},{"topics":[{}]},
                  {"level":0},{"level":True},{"count":21},{"count":0},{"count":"1.5"},
                  {"code":"M1-11-2-5-1234567890ABCDEF"},{"code":"M1-1-2-99-1234567890ABCDEF"},
                  {"code":"<script>"},{"code":123}]

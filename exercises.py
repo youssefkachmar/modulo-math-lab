@@ -3,12 +3,12 @@ from math import gcd
 import random
 import re
 import secrets
-from calculations import extended_gcd, factors, inverse, totient, rsa_keys, integer
+from calculations import extended_gcd, factors, inverse, totient, rsa_keys, integer, calculate
 
 TOPICS = {
     "1": "Division euclidienne", "2": "PGCD & Bézout", "3": "Congruences",
     "4": "Inverse modulaire", "5": "Indicatrice d’Euler",
-    "6": "Fermat & Euler", "7": "Chiffrement RSA",
+    "6": "Fermat & Euler", "7": "Chiffrement RSA", "8": "Équations de congruence",
 }
 LEVELS = {1: "Découverte", 2: "Entraînement", 3: "Défi"}
 
@@ -90,6 +90,35 @@ def make_exercise(topic, level, rng):
                     math(f"{a}" + (r"\equiv" if r == s else r"\not\equiv") + f"{other}\\pmod{{{n}}}"),
                     text(f"Les restes sont {'égaux' if r == s else 'différents'} : {r} et {s}.")]
         answer = dict(a=a, b=other, n=n, r=r, s=s, congruent=r == s)
+    elif topic == "8":
+        n = rng.randint(5, {1:15,2:40,3:80}[level])
+        a = rng.randint(2,n-1)
+        if level == 1:
+            while gcd(a,n) != 1:
+                a = rng.randint(2,n-1)
+        b = rng.randint(1,n-1)
+        if level == 3 and rng.choice([True,False]):
+            a = -a
+        answer = calculate("congruences",dict(mode="solve",a=a,b=b,n=n))
+        g = answer["g"]
+        prompt = [text("Résoudre l’équation dans les entiers. Donner toutes les solutions et vérifier."),
+                  math(fr"{a}x\equiv {b}\pmod{{{n}}}")]
+        result, solution = euclid_steps(a,n)
+        if not answer["solvable"]:
+            solution += [text(f"{g} ne divise pas {b}. La condition d’existence n’est pas vérifiée : aucune solution.")]
+        else:
+            ar, br, nr = answer["reduced_a"], answer["reduced_b"], answer["modulus"]
+            u, x = answer["u"], answer["x"]
+            solution += [text(f"Le PGCD {g} divise {b}. On divise le coefficient, le second membre et le module par {g}."),
+                         math(fr"{ar}x\equiv {br}\pmod{{{nr}}}"),
+                         text("On utilise l’algorithme d’Euclide étendu sur le coefficient et le module simplifiés.")]
+            solution += bezout_steps(ar,nr,extended_gcd(ar,nr))
+            solution += [math(fr"({ar})\times {u}\equiv1\pmod{{{nr}}}"),
+                         text("On multiplie les deux membres par cet inverse :"),
+                         math(fr"x\equiv {br}\times {u}\equiv {x}\pmod{{{nr}}}"),
+                         math(fr"x={x}+{nr}t,\qquad t\in\mathbb Z"),
+                         text(f"Il y a {g} classe(s) de solutions modulo {n}. Vérification :"),
+                         math(fr"({a})\times {x}={a*x}\equiv {b}\pmod{{{n}}}")]
     elif topic == "4":
         n = rng.randint(7, limit)
         a = rng.randint(2, n-1)
@@ -159,7 +188,7 @@ def generate_series(data):
     if code:
         if not isinstance(code, str) or len(code) > 60:
             raise ValueError("Numéro de série invalide.")
-        match = re.fullmatch(r"M1-([1-7]{1,7})-([1-3])-(\d{1,2})-([0-9A-F]{16})", code.strip().upper())
+        match = re.fullmatch(r"M1-([1-8]{1,8})-([1-3])-(\d{1,2})-([0-9A-F]{16})", code.strip().upper())
         if not match:
             raise ValueError("Numéro invalide. Copiez le code complet commençant par M1-.")
         selection, level, count, seed = match.groups()

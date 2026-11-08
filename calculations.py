@@ -94,13 +94,35 @@ def calculate(operation, data):
             result["exponent"] = result["phi"]-1
         return result
     if operation == "congruences":
-        a, b, n = number("a"), number("b"), number("n")
+        mode = data.get("mode", "check")
+        a, n = number("a"), number("n")
         if n < 2:
             raise ValueError("Le module doit être supérieur ou égal à 2.")
-        return dict(a=a, b=b, n=n, ra=a%n, rb=b%n, qa=a//n, qb=b//n,
+        if mode == "remainder":
+            return dict(mode=mode, a=a, n=n, q=a//n, r=a%n)
+        b = number("b")
+        if mode == "solve":
+            g = gcd(a,n)
+            result = dict(mode=mode,a=a,b=b,n=n,g=g,solvable=b%g==0)
+            if b%g:
+                return result
+            reduced_a, reduced_b, modulus = a//g, b//g, n//g
+            u = inverse(reduced_a,modulus)["value"] if modulus > 1 else 0
+            x = reduced_b*u % modulus
+            result.update(reduced_a=reduced_a,reduced_b=reduced_b,modulus=modulus,u=u,x=x,product=a*x)
+            return result
+        if mode != "check":
+            raise ValueError("Choisissez un mode de congruence valide.")
+        return dict(mode=mode,a=a, b=b, n=n, ra=a%n, rb=b%n, qa=a//n, qb=b//n,
                     difference=a-b, quotient=(a-b)//n, remainder=(a-b)%n, congruent=(a-b)%n==0)
     if operation == "fermat":
-        a, exponent, n = number("a"), number("exponent"), number("n")
+        a, n = number("a"), number("n")
+        simple = str(data.get("exponent", "")).strip() == ""
+        exponent = 1 if simple else number("exponent")
+        if simple:
+            if n < 2:
+                raise ValueError("Le module doit être supérieur ou égal à 2.")
+            return dict(simple=True,a=a,n=n,q=a//n,r=a%n)
         if not 2 <= n <= 10**6 or not 0 <= exponent <= 10**12:
             raise ValueError("Choisissez 2 ≤ n ≤ 1 000 000 et 0 ≤ l’exposant ≤ 10¹².")
         g, prime = gcd(a,n), is_prime(n)

@@ -10,7 +10,7 @@ async function api(operation, data) {
   if (!response.ok) throw Error(result.error || 'Le calcul a échoué.');
   return result;
 }
-function inputs() { const data={}; document.querySelectorAll('#calc input').forEach(e=>data[e.name]=e.value);return data; }
+function inputs() { const data={}; document.querySelectorAll('#calc input').forEach(e=>data[e.name]=e.value);if(view==='congruences')data.mode=congruenceMode;return data; }
 function tex(source, display=true) { return `<div class="math-equation">${katex.renderToString(source,{displayMode:display,throwOnError:false,trust:false})}</div>`; }
 function divisions(rows) { return rows.map(r=>tex(`${r.a} = ${r.b} \\times ${r.q} + ${r.r}`)).join(''); }
 function bezoutTable(z) { return `<details><summary>Comment obtient-on les coefficients ?</summary><p>Chaque ligne vérifie r = au + bv. On soustrait le quotient multiplié par la ligne actuelle à la ligne précédente.</p><div class="table-wrap"><table><thead><tr><th>r</th><th>u</th><th>v</th></tr></thead><tbody>${z.coefficients.map(r=>`<tr>${r.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`; }
@@ -51,10 +51,22 @@ function renderPPCM(z) {
  const method=(z.a==='0'||z.b==='0')?'<p>Par convention, le PPCM vaut 0 si l’un des deux entiers est nul.</p>':tex(`\\operatorname{PPCM}(${z.a},${z.b})=\\frac{|(${z.a})\\times(${z.b})|}{${z.g}}=${z.lcm}`);
  return answer('PLUS PETIT MULTIPLE COMMUN',tex(`\\operatorname{PPCM}(${z.a},${z.b})=${z.lcm}`),'Le résultat est positif ou nul.')+`<div class="steps">${step('Trouver le PGCD',divisions(z.rows)+tex(`\\operatorname{PGCD}(${z.a},${z.b})=${z.g}`))}${step('En déduire le PPCM',method)}</div>`;
 }
+function renderRemainder(z) {
+ return answer('RESTE',tex(`${z.a}\\equiv${z.r}\\pmod{${z.n}}`),`Le reste est ${z.r}.`)+`<div class="steps">${step('Effectuer la division euclidienne',tex(`${z.a}=${z.n}\\times(${z.q})+${z.r}`))}${step('Vérifier le reste',tex(`0\\le${z.r}<${z.n}`))}</div>`;
+}
 function renderCongruences(z) {
+ if(z.mode==='remainder')return renderRemainder(z);
+ if(z.mode==='solve') {
+  const condition=tex(`\\operatorname{PGCD}(${z.a},${z.n})=${z.g}`);
+  if(!z.solvable)return answer('AUCUNE SOLUTION',tex(`${z.a}x\\equiv${z.b}\\pmod{${z.n}}`),`${z.g} ne divise pas ${z.b}.`,true)+`<div class="steps">${step('Condition d’existence',condition+'<p>Une solution existe si et seulement si le PGCD de a et n divise b.</p>')}</div>`;
+  if(z.modulus==='1')return answer('TOUS LES ENTIERS',tex(`x\\in\\mathbb Z`),'Tout entier x convient.')+`<div class="steps">${step('Vérifier les coefficients',condition+tex(`${z.a}\\equiv0,\\quad${z.b}\\equiv0\\pmod{${z.n}}`))}</div>`;
+  return answer('LES SOLUTIONS',tex(`x\\equiv${z.x}\\pmod{${z.modulus}}`),`${z.g} classe(s) de solutions modulo ${z.n}.`)+`<div class="steps">${step('Vérifier puis simplifier',condition+`<p>${z.g} divise ${z.b}. On divise a, b et le module par ce PGCD.</p>`+tex(`${z.reduced_a}x\\equiv${z.reduced_b}\\pmod{${z.modulus}}`))}${step('Multiplier par l’inverse',tex(`(${z.reduced_a})\\times${z.u}\\equiv1\\pmod{${z.modulus}}`)+tex(`x\\equiv(${z.reduced_b})\\times${z.u}\\equiv${z.x}\\pmod{${z.modulus}}`))}${step('Écrire toutes les solutions',tex(`x=${z.x}+${z.modulus}t,\\quad t\\in\\mathbb Z`))}${step('Vérifier',tex(`(${z.a})\\times${z.x}=${z.product}\\equiv${z.b}\\pmod{${z.n}}`))}</div>`;
+ }
+
  return answer(z.congruent?'CONGRUENCE VÉRIFIÉE':'PAS DE CONGRUENCE',tex(`${z.a}${z.congruent?'\\equiv':'\\not\\equiv'}${z.b}\\pmod{${z.n}}`),z.congruent?'Les deux entiers ont le même reste.':'Les deux restes sont différents.',!z.congruent)+`<div class="steps">${step('Réduire les deux entiers',tex(`${z.a}=${z.n}\\times(${z.qa})+${z.ra}`)+tex(`${z.b}=${z.n}\\times(${z.qb})+${z.rb}`))}${step('Comparer les restes',tex(`r_a=${z.ra},\\qquad r_b=${z.rb}`))}${step('Vérifier par la différence',tex(`${z.a}-(${z.b})=${z.difference}=${z.n}\\times(${z.quotient})+${z.remainder}`)+`<p>${z.congruent?'La différence est un multiple de n.':'La différence n’est pas divisible par n.'}</p>`)}</div>`;
 }
 function renderFermat(z) {
+ if(z.simple)return renderRemainder(z);
  const theorem=z.period?(z.prime?'Petit théorème de Fermat':'Théorème d’Euler'):'Carrés successifs';
  const conditions=tex(`\\operatorname{PGCD}(${z.a},${z.n})=${z.g}`)+`<p>${z.n} ${z.prime?'est premier':'n’est pas premier'}. ${z.period?'Les conditions du théorème sont satisfaites.':'On ne peut pas appliquer la réduction de l’exposant de Fermat ou d’Euler : la base et le module ne sont pas premiers entre eux.'}</p>`;
  const reduction=z.period?(z.prime?tex(`p-1=${z.n}-1=${z.period}`):tex(`\\varphi(${z.n})=${z.period}`))+tex(`(${z.a})^{${z.period}}\\equiv1\\pmod{${z.n}}`)+tex(`${z.exponent}=${z.quotient}\\times${z.period}+${z.reduced}`)+tex(`(${z.a})^{${z.exponent}}\\equiv(${z.a})^{${z.reduced}}\\pmod{${z.n}}`):'<p>On conserve l’exposant initial et on réduit chaque carré modulo n.</p>';
