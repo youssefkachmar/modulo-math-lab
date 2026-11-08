@@ -1,0 +1,63 @@
+'use strict';
+let currentSeries = null;
+let showSolutions = false;
+let busy = false;
+const $ = selector => document.querySelector(selector);
+const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function blocks(items) {
+ return items.map(item => item.math !== undefined
+  ? `<div class="exercise-math">${katex.renderToString(item.math,{displayMode:true,throwOnError:true,trust:false})}</div>`
+  : `<p>${escapeHTML(item.text)}</p>`).join('');
+}
+function renderSeries() {
+ $('#empty-series').hidden = true;
+ $('#series-result').hidden = false;
+ $('#series-title').textContent = `Série de ${currentSeries.count} exercice${Number(currentSeries.count)>1?'s':''}`;
+ $('#series-meta').textContent = `${currentSeries.level_label} · ${currentSeries.topics.length} thème${currentSeries.topics.length>1?'s':''} · Calculatrice autorisée pour RSA`;
+ $('#current-code').textContent = currentSeries.code;
+ $('#exercise-list').innerHTML = currentSeries.exercises.map(ex => `<article class="exercise-card"><h3><span class="exercise-number">${String(ex.number).padStart(2,'0')}</span>${escapeHTML(ex.title)}</h3><div class="exercise-block">${blocks(ex.prompt)}</div><section class="exercise-solution" ${showSolutions?'':'hidden'}><div class="solution-label">CORRECTION · LE RAISONNEMENT</div><div class="exercise-block">${blocks(ex.solution)}</div></section></article>`).join('');
+ $('#toggle-correction').textContent = showSolutions ? 'Masquer le corrigé' : 'Afficher le corrigé';
+ $('#toggle-correction').setAttribute('aria-expanded',String(showSolutions));
+}
+function status(message, error=false) {
+ $('#series-status').textContent = message;
+ $('#series-status').classList.toggle('error',error);
+}
+async function generate(data) {
+ if(busy) return;
+ busy = true;
+ document.querySelectorAll('form button').forEach(b=>b.disabled=true);
+ status('Préparation de la série et de son corrigé…');
+ try {
+  const response = await fetch('/api/exercises',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  const result = await response.json();
+  if(!response.ok) throw Error(result.error || 'La série n’a pas pu être créée.');
+  currentSeries=result; showSolutions=false;
+  renderSeries();
+  $('#series-level').value=result.level;
+  $('#series-count').value=result.count;
+  document.querySelectorAll('[name=topic]').forEach(el=>el.checked=result.topics.includes(el.value));
+  $('#series-code').value=result.code;
+  history.replaceState(null,'',`#serie=${encodeURIComponent(result.code)}`);
+  status('Série prête. Gardez son numéro pour retrouver exactement les mêmes exercices.');
+ } catch(error) {
+  status(error instanceof SyntaxError ? 'Lancez l’application avec Python pour générer les exercices.' : error.message, true);
+ } finally {
+  busy=false;
+  document.querySelectorAll('form button').forEach(b=>b.disabled=false);
+ }
+}
+$('#series-form').addEventListener('submit',event=>{
+ event.preventDefault();
+ const topics=[...document.querySelectorAll('[name=topic]:checked')].map(el=>el.value);
+ if(!topics.length) { status('Choisissez au moins un thème.',true); return; }
+ generate({topics,level:$('#series-level').value,count:$('#series-count').value});
+});
+$('#restore-form').addEventListener('submit',event=>{event.preventDefault();generate({code:$('#series-code').value.trim()});});
+$('#toggle-correction').addEventListener('click',()=>{showSolutions=!showSolutions;renderSeries();});
+$('#copy-code').addEventListener('click',async()=>{
+ try { await navigator.clipboard.writeText(currentSeries.code); status('Numéro copié. Collez-le dans « Retrouver une série » pour la rouvrir.'); }
+ catch { status('Sélectionnez et copiez le numéro affiché au-dessus des boutons.'); }
+});
+const initialCode = new URLSearchParams(location.hash.slice(1)).get('serie');
+if(initialCode) generate({code:initialCode});

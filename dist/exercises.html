@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <title>Séries d’exercices — Modulo</title>
+ <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pixel.css">
+ <link rel="stylesheet" href="vendor/katex/katex.min.css"><link rel="stylesheet" href="exercises.css">
+ <script defer src="vendor/katex/katex.min.js"></script><script defer src="exercises.js"></script>
+</head>
+<body>
+ <header><div class="header-inner"><a class="brand" href="index.html#home"><span class="brand-mark" aria-hidden="true"><span class="robot-eyes"></span><span class="robot-keys">▪ ▪ ▪</span></span><span>modulo<span class="brand-sub">LE LABO DES NOMBRES</span></span></a><nav class="top-nav" aria-label="Navigation principale"><a href="index.html#home">Le laboratoire</a><a class="active" href="exercises.html" aria-current="page">Les exercices</a></nav><span class="local-label"><i></i>Calculs en Python</span></div></header>
+ <main class="exercise-app">
+  <div class="breadcrumb"><a href="index.html#home">Le laboratoire</a><span>/</span><span>Les exercices</span></div>
+  <section class="exercise-intro"><div><span class="overline">LE BUREAU D’ENTRAÎNEMENT</span><h1>À vous de jouer.</h1><p>Une nouvelle série, un crayon, et les idées au clair.<br>Préparez votre feuille, puis retrouvez le raisonnement dans le corrigé.</p></div><div class="paper-badge" aria-hidden="true"><span>EXOS</span><b>∑</b><small>01 / ∞</small></div></section>
+  <div class="exercise-layout">
+   <aside class="series-settings">
+    <div class="panel-heading"><span class="section-index">1</span><h2>Composer une série</h2></div>
+    <form id="series-form">
+     <fieldset><legend>Les thèmes</legend><p class="field-help">Choisissez un thème ou mélangez-les.</p><div class="topic-checks">
+      <label><input type="checkbox" name="topic" value="1" checked>Division euclidienne</label>
+      <label><input type="checkbox" name="topic" value="2" checked>PGCD & Bézout</label>
+      <label><input type="checkbox" name="topic" value="3" checked>Congruences</label>
+      <label><input type="checkbox" name="topic" value="4" checked>Inverse modulaire</label>
+      <label><input type="checkbox" name="topic" value="5" checked>Indicatrice d’Euler</label>
+      <label><input type="checkbox" name="topic" value="6" checked>Fermat & Euler</label>
+      <label><input type="checkbox" name="topic" value="7" checked>Chiffrement RSA</label>
+     </div></fieldset>
+     <label for="series-level">La difficulté<select id="series-level"><option value="1">Découverte · petits nombres</option><option value="2" selected>Entraînement · méthodes complètes</option><option value="3">Défi · nombres plus grands et signés</option></select></label>
+     <label for="series-count">Nombre d’exercices<input id="series-count" type="number" min="1" max="20" value="7" required><small>De 1 à 20. Les thèmes alternent dans la série.</small></label>
+     <button class="primary" id="generate" type="submit">Générer une nouvelle série <span>→</span></button>
+     <p class="field-help">Chaque nouvelle série change les nombres. Le corrigé reste lié à sa feuille.</p>
+    </form>
+    <details class="restore"><summary>Retrouver une série</summary><form id="restore-form"><label for="series-code">Numéro de série<input id="series-code" maxlength="60" placeholder="M1-…" required autocomplete="off" spellcheck="false"></label><button class="secondary" type="submit">Retrouver cette série</button></form></details>
+   </aside>
+   <section class="series-workspace" aria-labelledby="series-title">
+    <div id="series-status" role="status" aria-live="polite"></div>
+    <div id="empty-series" class="empty-series"><span class="empty-number">a × vous = progrès</span><h2>Votre prochaine série commence ici.</h2><p>Choisissez les thèmes à gauche, puis générez une feuille.<br>Les corrections restent masquées jusqu’à ce que vous les demandiez.</p><div class="empty-steps"><span>01 · Choisir</span><span>02 · Chercher</span><span>03 · Comprendre</span></div></div>
+    <div id="series-result" hidden>
+     <div class="series-heading"><div><span class="overline">VOTRE FEUILLE DE TRAVAIL</span><h2 id="series-title">Série d’exercices</h2><p id="series-meta"></p></div><span class="sheet-stamp">MODULO<br>ENTRAÎNEMENT</span></div>
+     <div class="series-code-row"><code id="current-code"></code><button id="copy-code" type="button">Copier le numéro</button></div>
+     <div class="sheet-actions"><button id="print-exercises" class="primary" type="button">Imprimer les exercices</button><button id="toggle-correction" class="secondary" type="button" aria-expanded="false" aria-controls="exercise-list">Afficher le corrigé</button><button id="print-correction" class="quiet" type="button">Imprimer le corrigé</button></div>
+     <p class="print-tip">Format A4 · Énoncés et corrigé séparés · « Enregistrer au format PDF » dans la fenêtre d’impression.</p>
+     <div id="exercise-list"></div>
+    </div>
+   </section>
+  </div>
+  <footer><span><strong>modulo</strong> À chaque essai, une idée plus claire.</span><a href="index.html#home">Retour au laboratoire →</a></footer>
+ </main>
+ <div id="print-document"></div>
+</body></html>
