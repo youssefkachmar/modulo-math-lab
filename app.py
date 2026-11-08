@@ -44,9 +44,10 @@ class Handler(SimpleHTTPRequestHandler):
 def main():
     parser = argparse.ArgumentParser(description="Modulo — Le labo des nombres")
     parser.add_argument("--port", type=int, default=8766)
+    parser.add_argument("--host", default="127.0.0.1", help="Adresse d’écoute (0.0.0.0 pour un hébergeur)")
     parser.add_argument("--open", action="store_true", help="Ouvrir le navigateur")
     args = parser.parse_args()
-    server = ThreadingHTTPServer(("127.0.0.1", args.port), partial(Handler, directory=str(ROOT)))
+    server = ThreadingHTTPServer((args.host, args.port), partial(Handler, directory=str(ROOT)))
     url = f"http://127.0.0.1:{args.port}"
     print(f"Modulo est prêt : {url}\nCtrl+C pour fermer le serveur.", flush=True)
     if args.open:
