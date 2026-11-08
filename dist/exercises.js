@@ -61,3 +61,30 @@ $('#copy-code').addEventListener('click',async()=>{
 });
 const initialCode = new URLSearchParams(location.hash.slice(1)).get('serie');
 if(initialCode) generate({code:initialCode});
+
+let printMode = 'exercises';
+function preparePrint(mode) {
+ if(!currentSeries) return;
+ const correction = mode === 'correction';
+ const groups = correction ? currentSeries.exercises.map(ex=>[ex])
+  : currentSeries.exercises.reduce((pages,ex,index)=>{if(index%2===0) pages.push([]);pages[pages.length-1].push(ex);return pages;},[]);
+ $('#print-document').innerHTML=groups.map((group,index)=>`<section class="print-page ${correction?'correction-page':''}">
+  <div class="print-header"><strong>modulo</strong><span>${correction?'CORRIGÉ DÉTAILLÉ':'SÉRIE D’EXERCICES'}</span></div>
+  <h1>${correction?'Comprendre chaque étape.':'À vous de jouer.'}</h1>
+  <div class="print-meta">${escapeHTML(currentSeries.level_label)} · ${currentSeries.count} exercices · Série ${escapeHTML(currentSeries.code)}</div>
+  ${correction?'':'<div class="student-line"><span>Nom : ______________________________</span><span>Date : ______________</span></div>'}
+  ${group.map(ex=>`<article class="printed-exercise"><h2>Exercice ${ex.number} · ${escapeHTML(ex.title)}</h2><div class="exercise-block">${blocks(ex.prompt)}</div>${correction?`<div class="printed-solution"><h3>Correction</h3><div class="exercise-block">${blocks(ex.solution)}</div></div>`:'<div class="writing-space" aria-hidden="true"></div>'}</article>`).join('')}
+  <div class="print-footer"><span>${correction?'Corrigé':'Énoncés'} · ${escapeHTML(currentSeries.code)}</span><span>${index+1} / ${groups.length}</span></div>
+ </section>`).join('');
+}
+async function printSeries(mode) {
+ if(!currentSeries) return;
+ printMode=mode;
+ preparePrint(mode);
+ await document.fonts.ready;
+ window.print();
+}
+$('#print-exercises').addEventListener('click',()=>printSeries('exercises'));
+$('#print-correction').addEventListener('click',()=>printSeries('correction'));
+window.addEventListener('beforeprint',()=>preparePrint(printMode));
+window.addEventListener('afterprint',()=>{printMode='exercises';});

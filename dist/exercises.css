@@ -17,6 +17,30 @@
 .sheet-actions{display:flex;flex-wrap:wrap;gap:12px}.sheet-actions button{font-size:11px;padding:11px 12px;width:auto;margin:0;line-height:1.5}.print-tip{font-size:11px;color:#63718b;line-height:1.7;margin:17px 0 25px}
 .exercise-card{padding:24px 0;border-top:1px solid #ced8eb;min-width:0}.exercise-card h3{font-size:15px;display:flex;align-items:center;gap:10px;margin:0 0 16px}.exercise-number{font:11px 'Courier New',monospace;border:1px solid #9badcf;background:#f0f4ff;padding:5px 7px;color:#234383}.exercise-block p{font-size:14px;line-height:1.85;color:#344360;margin:10px 0}.exercise-math{overflow-x:auto;overflow-y:hidden;padding:3px 0;max-width:100%;font-size:15px}.exercise-math .katex-display{margin:.6em 0;text-align:left}.exercise-math .katex-display>.katex{text-align:left;white-space:nowrap}.exercise-solution{background:#f5f8ff;border-left:3px solid #4769c3;padding:15px 20px;margin-top:24px}.solution-label{font:700 10px 'Courier New',monospace;color:#244edc;letter-spacing:.7px}.exercise-solution .exercise-block p{font-size:13px}.exercise-solution .exercise-math{font-size:14px}.exercise-app button:disabled{opacity:.55;cursor:wait}.exercise-app :focus-visible{outline:3px solid #e6a321;outline-offset:3px}
 #print-document{display:none}
+@page{size:A4;margin:14mm}
+@media print{
+ html,body{background:white!important;margin:0!important;padding:0!important;color:#17233c!important}
+ body>header,.exercise-app{display:none!important}
+ #print-document{display:block!important;font-family:'Segoe UI',Arial,sans-serif}
+ .print-page{position:relative;min-height:267mm;padding:0 0 12mm;box-sizing:border-box;break-after:page}
+ .print-page:last-child{break-after:auto}
+ .print-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5pt solid #17233c;padding-bottom:3mm}
+ .print-header strong{font:700 20pt 'Courier New',monospace}.print-header span{font:9pt 'Courier New',monospace}
+ .print-page h1{font:700 19pt 'Courier New',monospace;margin:6mm 0 3mm}
+ .print-meta{font-size:8pt;line-height:1.6;margin-bottom:5mm;overflow-wrap:anywhere}
+ .student-line{display:flex;justify-content:space-between;font-size:10pt;padding:3mm 0 5mm;border-bottom:1pt solid #aaa}
+ .printed-exercise{padding-top:6mm;break-inside:avoid}.printed-exercise h2{font-size:11pt;margin:0 0 3mm}
+ .print-page .exercise-block p{font-size:10pt;line-height:1.55;margin:2mm 0;color:#17233c}
+ .print-page .exercise-math{font-size:11pt;overflow:visible;padding:0}
+ .print-page .katex-display{margin:2mm 0}
+ .writing-space{height:53mm;margin:4mm 0 2mm;background:repeating-linear-gradient(to bottom,transparent 0,transparent 8.7mm,#ccd1da 8.7mm,#ccd1da 8.9mm);print-color-adjust:exact}
+ .print-footer{position:absolute;bottom:0;left:0;right:0;border-top:.5pt solid #aaa;padding-top:3mm;display:flex;justify-content:space-between;gap:5mm;font-size:8pt}
+ .printed-solution{border-top:.5pt solid #b4bfd3;margin-top:4mm;padding-top:2mm}
+ .printed-solution h3{font:700 9pt 'Courier New',monospace;color:#17233c;margin:2mm 0}
+ .correction-page .printed-exercise{padding-top:1mm}
+ .correction-page .exercise-block p{font-size:9pt;line-height:1.4;margin:1.6mm 0}
+ .correction-page .exercise-math{font-size:10pt}.correction-page .katex-display{margin:1.5mm 0}
+}
 @media(max-width:900px){.exercise-layout{grid-template-columns:245px minmax(0,1fr);gap:20px}.exercise-app{padding:0 22px}#series-result{padding:22px 18px}.sheet-stamp{display:none}.series-settings{padding:0 16px 16px}.series-settings .panel-heading{margin:0 -16px 20px}}
 @media(max-width:700px){.exercise-layout{grid-template-columns:1fr}.exercise-intro{padding-top:5px}.paper-badge{width:76px}.paper-badge b{font-size:30px}.exercise-intro h1{font-size:31px}.exercise-intro p{font-size:12px}.exercise-intro p br{display:none}.topic-checks{grid-template-columns:1fr 1fr;gap:4px 12px}.series-settings{margin:0}.empty-series{padding:40px 20px}.exercise-app .header-inner{gap:12px}.exercise-math{font-size:14px}}
 @media(max-width:400px){.exercise-app{padding:0 16px}.paper-badge{display:none}.topic-checks{grid-template-columns:1fr}.sheet-actions button{width:100%;justify-content:center}}
