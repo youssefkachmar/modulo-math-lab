@@ -33,6 +33,7 @@ async function generate(data) {
   const result = await response.json();
   if(!response.ok) throw Error(result.error || 'La série n’a pas pu être créée.');
   currentSeries=result; showSolutions=false;
+  $('#print-document').innerHTML='';
   renderSeries();
   $('#series-level').value=result.level;
   $('#series-count').value=result.count;
@@ -54,6 +55,9 @@ $('#series-form').addEventListener('submit',event=>{
  generate({topics,level:$('#series-level').value,count:$('#series-count').value});
 });
 $('#restore-form').addEventListener('submit',event=>{event.preventDefault();generate({code:$('#series-code').value.trim()});});
+$('#series-form').addEventListener('change',()=>{
+ if(currentSeries) status('Paramètres modifiés : cliquez sur « Générer » pour créer une nouvelle feuille. La série affichée reste inchangée.');
+});
 $('#toggle-correction').addEventListener('click',()=>{showSolutions=!showSolutions;renderSeries();});
 $('#copy-code').addEventListener('click',async()=>{
  try { await navigator.clipboard.writeText(currentSeries.code); status('Numéro copié. Collez-le dans « Retrouver une série » pour la rouvrir.'); }
