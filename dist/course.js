@@ -7,7 +7,7 @@ const stationFormulas = [
  String.raw`m\longmapsto c\equiv m^{e}\pmod n`
 ];
 document.querySelectorAll('.module-formula').forEach((element,index)=>{
- katex.render(stationFormulas[index],element,{displayMode:true,throwOnError:true,trust:false});
+ katex.render(element.dataset.formula || stationFormulas[index],element,{displayMode:true,throwOnError:true,trust:false});
 });
 // LaTeX is rendered locally. The source remains readable for editing the lesson.
 const I=(s,...v)=>katex.renderToString(String.raw(s,...v),{throwOnError:true,trust:false});

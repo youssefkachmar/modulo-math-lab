@@ -35,24 +35,34 @@ vm.runInContext('currentSeries=series;renderSeries()',context);
 const promptCount=series.exercises.reduce((n,e)=>n+e.prompt.filter(b=>'math' in b).length,0);
 const solutionCount=series.exercises.reduce((n,e)=>n+e.solution.filter(b=>'math' in b).length,0);
 assert.equal(renderCount,promptCount,'Hidden solutions must not be typeset');
-vm.runInContext("printSeries('correction')",context);
-assert.ok(openedURL.startsWith('print.html?mode=correction&code='));
-assert.equal(renderCount,promptCount,'Opening a print sheet must not build hidden print formulas in the app');
-assert.equal(writes,0);
-// Ctrl+P fallback still creates only one document for repeated browser events.
-events.beforeprint(); events.beforeprint();
-assert.equal(writes,1);
+async function run() {
+await vm.runInContext("printSeries('exercises')",context);
+assert.equal(openedURL,null,'Printing must not open another tab');
+assert.equal(printCount,1);
+assert.equal(writes,1,'Repeated beforeprint events reuse the prepared sheet');
 assert.ok(!element('#print-document').innerHTML.includes('printed-solution'));
+await vm.runInContext("printSeries('correction')",context);
+assert.equal(printCount,1,'Ignore duplicate clicks while printing');
 events.afterprint();
 assert.equal(element('#print-document').innerHTML,'');
+await vm.runInContext("printSeries('correction')",context);
+assert.equal(printCount,2);
+assert.ok(element('#print-document').innerHTML.includes('printed-solution'));
+events.afterprint();
+// Keyboard printing defaults to questions and reuses repeated events.
+events.beforeprint(); events.beforeprint();
+assert.equal(writes,3);
+assert.ok(!element('#print-document').innerHTML.includes('printed-solution'));
+events.afterprint();
 const correction=vm.runInContext("buildPrintDocument(series,'correction')",context);
 assert.equal((correction.match(/class="print-page/g)||[]).length,20);
 assert.equal((correction.match(/<math /g)||[]).length,promptCount+solutionCount);
 assert.ok(!correction.includes('katex-html'),'Print sheets must not contain the HTML formula layout tree');
 assert.ok(correction.includes('printed-solution'));
 const questions=vm.runInContext("buildPrintDocument(series,'exercises')",context);
-assert.equal((questions.match(/class="print-page/g)||[]).length,10);
+assert.equal((questions.match(/class="print-page/g)||[]).length,5);
 assert.ok(!questions.includes('printed-solution'));
+assert.ok(!questions.includes('writing-space'));
 const beforeToggle=renderCount;
 vm.runInContext('showSolutions=true;updateSolutions();showSolutions=false;updateSolutions();showSolutions=true;updateSolutions()',context);
 assert.equal(renderCount-beforeToggle,solutionCount,'Correction toggles typeset each solution only once');
@@ -63,4 +73,7 @@ vm.runInContext(fs.readFileSync('dist/worksheet.js','utf8').replace("output:'mat
 const baseline=vm.runInContext("buildPrintDocument(series,'correction')",baselineContext);
 const tags=html=>(html.match(/<[a-z][^>]*>/gi)||[]).length;
 assert.ok(tags(correction)<tags(baseline)*0.5);
-console.log(`PASS: isolated print link; native maths; questions/corrections separated; Ctrl+P cleanup; print elements ${tags(baseline)} -> ${tags(correction)}; markup ${(Buffer.byteLength(baseline)/1024).toFixed(0)} KB -> ${(Buffer.byteLength(correction)/1024).toFixed(0)} KB.`);
+console.log(`PASS: direct printing; native maths; questions/corrections separated; duplicate-click guard; Ctrl+P cleanup; no answer lines; print elements ${tags(baseline)} -> ${tags(correction)}; markup ${(Buffer.byteLength(baseline)/1024).toFixed(0)} KB -> ${(Buffer.byteLength(correction)/1024).toFixed(0)} KB.`);
+
+}
+run().catch(error=>{console.error(error);process.exitCode=1;});

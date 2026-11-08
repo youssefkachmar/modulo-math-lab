@@ -5,6 +5,26 @@ from calculations import calculate, extended_gcd, inverse, totient, rsa_keys, js
 
 
 class ArithmeticTests(unittest.TestCase):
+    def test_new_calculators(self):
+        for a in range(-10, 11):
+            for b in range(-10, 11):
+                self.assertEqual(calculate('ppcm',dict(a=a,b=b))['lcm'], math.lcm(a,b))
+                z=calculate('congruences',dict(a=a,b=b,n=7))
+                self.assertEqual(z['congruent'], (a-b)%7==0)
+                self.assertEqual(a,7*z['qa']+z['ra'])
+        for a in [-7,0,6,7]:
+            for n in [2,13,15,16]:
+                for k in [0,1,12,222,10**12]:
+                    z=calculate('fermat',dict(a=a,n=n,exponent=k))
+                    self.assertEqual(z['value'],pow(a,k,n))
+                    product=1
+                    for row in z['rows']:
+                        self.assertEqual(row['residue'],pow(a,row['power'],n))
+                        if row['used']: product=product*row['residue']%n
+                    self.assertEqual(product,z['value'])
+        for op,data in [('congruences',dict(a=1,b=2,n=1)),('fermat',dict(a=2,n=13,exponent=-1)),('fermat',dict(a=2,n=1000001,exponent=5))]:
+            with self.assertRaises(ValueError): calculate(op,data)
+
     def test_bezout_for_signed_integers(self):
         for a in range(-25, 26):
             for b in range(-25, 26):

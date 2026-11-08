@@ -39,8 +39,7 @@
  .print-page .exercise-block p{font-size:10pt;line-height:1.55;margin:2mm 0;color:#17233c}
  .print-page .exercise-math{font-size:11pt;overflow:visible;padding:0}
  .print-page .katex-display{margin:2mm 0}
- .writing-space{height:53mm;margin:4mm 0 2mm}
- .writing-space>div{height:8.8mm;border-bottom:.5pt solid #ccd1da}
+ .print-page math{font-family:'Cambria Math',math;font-size:1em;text-align:left;margin:2mm 0}
  .print-footer{position:absolute;bottom:0;left:0;right:0;border-top:.5pt solid #aaa;padding-top:3mm;display:flex;justify-content:space-between;gap:5mm;font-size:8pt}
  .printed-solution{border-top:.5pt solid #b4bfd3;margin-top:4mm;padding-top:2mm}
  .printed-solution h3{font:700 9pt 'Courier New',monospace;color:#17233c;margin:2mm 0}

@@ -93,12 +93,36 @@ def calculate(operation, data):
             result.update(phi=totient(n), prime=is_prime(n))
             result["exponent"] = result["phi"]-1
         return result
-    if operation == "euclide":
+    if operation == "congruences":
+        a, b, n = number("a"), number("b"), number("n")
+        if n < 2:
+            raise ValueError("Le module doit être supérieur ou égal à 2.")
+        return dict(a=a, b=b, n=n, ra=a%n, rb=b%n, qa=a//n, qb=b//n,
+                    difference=a-b, quotient=(a-b)//n, remainder=(a-b)%n, congruent=(a-b)%n==0)
+    if operation == "fermat":
+        a, exponent, n = number("a"), number("exponent"), number("n")
+        if not 2 <= n <= 10**6 or not 0 <= exponent <= 10**12:
+            raise ValueError("Choisissez 2 ≤ n ≤ 1 000 000 et 0 ≤ l’exposant ≤ 10¹².")
+        g, prime = gcd(a,n), is_prime(n)
+        period = (n-1 if prime else totient(n)) if g == 1 else None
+        reduced = exponent % period if period else exponent
+        rows, power, residue, accumulator = [], 1, a % n, 1
+        while power <= reduced:
+            used = bool(reduced & power)
+            if used:
+                accumulator = accumulator * residue % n
+            rows.append(dict(power=power, residue=residue, used=used, accumulator=accumulator))
+            power *= 2
+            residue = residue * residue % n
+        return dict(a=a, exponent=exponent, n=n, g=g, prime=prime, period=period,
+                    reduced=reduced, quotient=exponent//period if period else None,
+                    rows=rows, value=pow(a,exponent,n))
+    if operation in ("euclide", "ppcm"):
         a, b = number("a"), number("b")
-        if a == b == 0:
+        if a == b == 0 and operation == "euclide":
             raise ValueError("Choisissez au moins un entier non nul.")
         result = extended_gcd(a, b)
-        result.update(a=a, b=b, lcm=abs(a*b)//result["g"])
+        result.update(a=a, b=b, lcm=abs(a*b)//result["g"] if result["g"] else 0)
         result["division"] = None if b == 0 else dict(q=(a-a%abs(b))//b, r=a%abs(b))
         return result
     if operation == "euler":

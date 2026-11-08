@@ -33,7 +33,7 @@ async function calculate() {
  $('#result').setAttribute('aria-busy','true');
  try { const z=await api(current,inputs());if(id!==requestId||view!==current)return;
   if(current==='rsa')rsaKey=z;
-  $('#result').innerHTML=({inverse:renderInverse,euclide:renderEuclide,euler:renderEuler,rsa:rsaResult})[current](z);
+  $('#result').innerHTML=({inverse:renderInverse,euclide:renderEuclide,euler:renderEuler,ppcm:renderPPCM,congruences:renderCongruences,fermat:renderFermat,rsa:rsaResult})[current](z);
  } catch(e) {if(id===requestId)showError(e);} finally {if(id===requestId)$('#result').removeAttribute('aria-busy');}
 }
 async function crypt(action) {
@@ -46,4 +46,19 @@ async function crypt(action) {
   $('#use-cipher').onclick=()=>{$('#message').value=z.output.join(' ');crypt('decrypt');};
  }else $('#message-result').innerHTML=`<h3 class="subhead">MESSAGE DÉCHIFFRÉ</h3><div class="answer"><div class="result-text">${esc(z.decoded)}</div></div><p class="small-note">Calcul du premier bloc :</p>${note}`;
  }catch(e){if(id===requestId)showError(e);}
+}
+function renderPPCM(z) {
+ const method=(z.a==='0'||z.b==='0')?'<p>Par convention, le PPCM vaut 0 si l’un des deux entiers est nul.</p>':tex(`\\operatorname{PPCM}(${z.a},${z.b})=\\frac{|(${z.a})\\times(${z.b})|}{${z.g}}=${z.lcm}`);
+ return answer('PLUS PETIT MULTIPLE COMMUN',tex(`\\operatorname{PPCM}(${z.a},${z.b})=${z.lcm}`),'Le résultat est positif ou nul.')+`<div class="steps">${step('Trouver le PGCD',divisions(z.rows)+tex(`\\operatorname{PGCD}(${z.a},${z.b})=${z.g}`))}${step('En déduire le PPCM',method)}</div>`;
+}
+function renderCongruences(z) {
+ return answer(z.congruent?'CONGRUENCE VÉRIFIÉE':'PAS DE CONGRUENCE',tex(`${z.a}${z.congruent?'\\equiv':'\\not\\equiv'}${z.b}\\pmod{${z.n}}`),z.congruent?'Les deux entiers ont le même reste.':'Les deux restes sont différents.',!z.congruent)+`<div class="steps">${step('Réduire les deux entiers',tex(`${z.a}=${z.n}\\times(${z.qa})+${z.ra}`)+tex(`${z.b}=${z.n}\\times(${z.qb})+${z.rb}`))}${step('Comparer les restes',tex(`r_a=${z.ra},\\qquad r_b=${z.rb}`))}${step('Vérifier par la différence',tex(`${z.a}-(${z.b})=${z.difference}=${z.n}\\times(${z.quotient})+${z.remainder}`)+`<p>${z.congruent?'La différence est un multiple de n.':'La différence n’est pas divisible par n.'}</p>`)}</div>`;
+}
+function renderFermat(z) {
+ const theorem=z.period?(z.prime?'Petit théorème de Fermat':'Théorème d’Euler'):'Carrés successifs';
+ const conditions=tex(`\\operatorname{PGCD}(${z.a},${z.n})=${z.g}`)+`<p>${z.n} ${z.prime?'est premier':'n’est pas premier'}. ${z.period?'Les conditions du théorème sont satisfaites.':'On ne peut pas appliquer la réduction de l’exposant de Fermat ou d’Euler : la base et le module ne sont pas premiers entre eux.'}</p>`;
+ const reduction=z.period?(z.prime?tex(`p-1=${z.n}-1=${z.period}`):tex(`\\varphi(${z.n})=${z.period}`))+tex(`(${z.a})^{${z.period}}\\equiv1\\pmod{${z.n}}`)+tex(`${z.exponent}=${z.quotient}\\times${z.period}+${z.reduced}`)+tex(`(${z.a})^{${z.exponent}}\\equiv(${z.a})^{${z.reduced}}\\pmod{${z.n}}`):'<p>On conserve l’exposant initial et on réduit chaque carré modulo n.</p>';
+ const selected=z.rows.filter(r=>r.used);
+ const powers=z.rows.length?z.rows.map(r=>tex(`(${z.a})^{${r.power}}\\equiv${r.residue}\\pmod{${z.n}}`)).join('')+tex(`${z.reduced}=${selected.map(r=>r.power).join('+')}`)+tex(`${selected.map(r=>r.residue).join('\\times')}\\equiv${z.value}\\pmod{${z.n}}`):tex(`(${z.a})^0=1`);
+ return answer(theorem.toUpperCase(),tex(`(${z.a})^{${z.exponent}}\\equiv${z.value}\\pmod{${z.n}}`),z.exponent==='0'?'Pour un exposant nul, la puissance vaut 1 (convention de calcul, y compris 0⁰).':'Reste calculé exactement en Python.')+`<div class="steps">${step('Vérifier les conditions',conditions)}${step('Réduire l’exposant si possible',reduction)}${step('Terminer le calcul',powers)}</div>`;
 }

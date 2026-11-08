@@ -22,6 +22,9 @@ Gardez la fenêtre du serveur ouverte pendant l’utilisation. Ctrl+C arrête le
 
 - Inverse modulaire : Euclide étendu, Bézout, représentant positif et vérification.
 - PGCD, PPCM et division euclidienne avec reste positif pour les entiers signés.
+- PPCM : un calculateur dédié, avec la méthode par le PGCD.
+- Congruences : restes des deux entiers et divisibilité de leur différence.
+- Fermat et Euler : conditions, réduction de l’exposant et carrés successifs (également sans réduction lorsque les conditions ne sont pas remplies).
 - Indicatrice d’Euler : facteurs premiers, calcul et visualisation.
 - RSA : génération de clés, chiffrement et déchiffrement de nombres ou de textes UTF-8.
 - Carnet de cours : huit chapitres, exemples détaillés, six exercices avec corrections et formules LaTeX rendues avec KaTeX.
@@ -31,10 +34,10 @@ Gardez la fenêtre du serveur ouverte pendant l’utilisation. Ctrl+C arrête le
 
 Ouvrez **Les exercices** dans la navigation. Choisissez les thèmes, le niveau et le nombre de questions, puis cliquez sur **Générer une nouvelle série**. Les nombres changent à chaque nouvelle génération ; les questions d’une même feuille sont distinctes et les thèmes sélectionnés alternent.
 
-- **Imprimer les exercices** prépare une feuille A4 avec deux exercices par page, des espaces de rédaction et aucun corrigé, même si celui-ci est affiché à l’écran.
+- **Imprimer les exercices** prépare une feuille A4 avec quatre exercices par page, sans lignes de rédaction et aucun corrigé, même si celui-ci est affiché à l’écran.
 - **Afficher le corrigé** révèle les méthodes, les divisions d’Euclide, les coefficients de Bézout et les vérifications.
 - **Imprimer le corrigé** prépare un document séparé avec une correction par page. Le même numéro de série figure sur les deux documents.
-- Les boutons d’impression ouvrent une feuille légère dans un nouvel onglet. Cliquez ensuite sur **Imprimer / PDF**. La feuille utilise les équations natives du navigateur et ne charge pas l’interface du calculateur. Fermez cet onglet après utilisation.
+- Les boutons ouvrent directement la fenêtre d’impression, sans nouvel onglet. Les équations imprimées utilisent le MathML natif ; la feuille temporaire est libérée après fermeture de la fenêtre.
 - Pour créer un PDF, choisissez **Enregistrer au format PDF** dans la fenêtre d’impression. Utilisez A4, échelle 100 %, et désactivez les en-têtes/pieds de page ajoutés par le navigateur si nécessaire.
 - Copiez le numéro `M1-…` pour rouvrir la série via **Retrouver une série**. Il encode les thèmes, la difficulté, le nombre de questions et la graine aléatoire ; aucun compte ni stockage en ligne n’est nécessaire. L’adresse de la page contient également ce numéro.
 

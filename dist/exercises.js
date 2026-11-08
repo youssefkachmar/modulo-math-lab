@@ -96,11 +96,20 @@ function releasePrint() {
  $('#print-exercises').disabled=false;
  $('#print-correction').disabled=false;
 }
-function printSeries(mode) {
- if(!currentSeries || busy) return;
- const url=`print.html?mode=${encodeURIComponent(mode)}&code=${encodeURIComponent(currentSeries.code)}`;
- window.open(url,'_blank','noopener');
- status('La feuille à imprimer s’ouvre dans un nouvel onglet. Utilisez son bouton Imprimer.');
+async function printSeries(mode) {
+ if(!currentSeries || busy || printing) return;
+ printing=true;
+ $('#print-exercises').disabled=true;
+ $('#print-correction').disabled=true;
+ try {
+  printMode=mode;
+  preparePrint(mode);
+  await document.fonts.ready;
+  window.print();
+ } catch(error) {
+  status('Impossible de démarrer l’impression. Réessayez.',true);
+  releasePrint();
+ }
 }
 $('#print-exercises').addEventListener('click',()=>printSeries('exercises'));
 $('#print-correction').addEventListener('click',()=>printSeries('correction'));
