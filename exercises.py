@@ -3,6 +3,7 @@ from math import gcd
 import random
 import re
 import secrets
+from practice import practice_for
 from calculations import extended_gcd, factors, inverse, totient, rsa_keys, integer, calculate
 
 TOPICS = {
@@ -220,6 +221,7 @@ def generate_series(data):
             raise ValueError("Impossible de créer une série distincte. Essayez moins d’exercices.")
         signatures.add(signature)
         item["number"] = i+1
+        item["practice"] = practice_for(item)
         exercises.append(item)
     return dict(code=code, level=level, level_label=LEVELS[level], count=count,
                 topics=list(selection), exercises=exercises)

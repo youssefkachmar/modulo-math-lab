@@ -19,9 +19,53 @@ function renderSeries() {
  $('#series-title').textContent = `Série de ${currentSeries.count} exercice${Number(currentSeries.count)>1?'s':''}`;
  $('#series-meta').textContent = `${currentSeries.level_label} · ${currentSeries.topics.length} thème${currentSeries.topics.length>1?'s':''} · Calculatrice autorisée pour RSA`;
  $('#current-code').textContent = currentSeries.code;
- $('#exercise-list').innerHTML = currentSeries.exercises.map(ex => `<article class="exercise-card"><h3><span class="exercise-number">${String(ex.number).padStart(2,'0')}</span>${escapeHTML(ex.title)}</h3><div class="exercise-block">${blocks(ex.prompt)}</div><section class="exercise-solution" hidden></section></article>`).join('');
+ $('#exercise-list').innerHTML = currentSeries.exercises.map((ex,index) => `<article class="exercise-card"><h3><span class="exercise-number">${String(ex.number).padStart(2,'0')}</span>${escapeHTML(ex.title)}</h3><div class="exercise-block">${blocks(ex.prompt)}</div>${practiceHTML(ex,index)}<section class="exercise-solution" hidden></section></article>`).join('');
  updateSolutions();
 }
+function practiceHTML(ex,index) {
+ const p=ex.practice;
+ if(!p)return '';
+ return `<div class="practice-area"><div class="hint-actions"><button type="button" class="secondary" data-hint="${index}">Un indice (0/${p.hints.length})</button><span>Les indices se dévoilent un à un.</span></div><ol class="hint-list" id="hints-${index}" aria-live="polite" hidden></ol><form class="answer-form" data-index="${index}" data-revision="0"><h4>À vous de répondre</h4><p class="practice-note">Vérifiez vos résultats ici. Gardez votre raisonnement sur papier : les étapes rédigées ne sont pas évaluées.</p><div class="practice-fields">${p.fields.map(f=>`<label ${f.when?`data-when="${f.when}" hidden`:''}>${escapeHTML(f.label)}${f.options?`<select name="${f.key}" required><option value="">Choisir…</option>${f.options.map(([v,label])=>`<option value="${v}">${label}</option>`).join('')}</select>`:`<input name="${f.key}" inputmode="numeric" autocomplete="off" maxlength="100" required ${f.when?'disabled':''}>`}</label>`).join('')}</div><button class="secondary" type="submit">Vérifier mes réponses</button><div class="answer-feedback" role="status" aria-live="polite"></div></form></div>`;
+}
+$('#exercise-list').addEventListener('click',event=>{
+ const button=event.target.closest('[data-hint]');
+ if(!button)return;
+ const index=Number(button.dataset.hint), hints=currentSeries.exercises[index].practice.hints;
+ const list=$('#hints-'+index), count=list.children.length;
+ if(count>=hints.length)return;
+ const item=document.createElement('li');item.textContent=hints[count];list.append(item);list.hidden=false;
+ button.textContent=count+1===hints.length?'Tous les indices sont affichés':`Indice suivant (${count+1}/${hints.length})`;
+ button.disabled=count+1===hints.length;
+});
+$('#exercise-list').addEventListener('input',event=>{
+ const form=event.target.closest('.answer-form');if(!form)return;
+ form.dataset.revision=String(Number(form.dataset.revision)+1);
+ form.querySelector('.answer-feedback').replaceChildren();
+ form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));
+ form.querySelectorAll('[data-when]').forEach(label=>{
+  const [key,value]=label.dataset.when.split(':');
+  const active=form.elements.namedItem(key).value===value;
+  label.hidden=!active;label.querySelector('input').disabled=!active;
+ });
+});
+$('#exercise-list').addEventListener('submit',async event=>{
+ const form=event.target.closest('.answer-form');if(!form)return;
+ event.preventDefault();
+ const button=form.querySelector('button[type=submit]');if(button.disabled)return;
+ const code=currentSeries.code, revision=form.dataset.revision, feedback=form.querySelector('.answer-feedback');
+ button.disabled=true;feedback.textContent='Vérification…';
+ try {
+  const values=Object.fromEntries(new FormData(form));
+  const response=await fetch('/api/check-answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,index:Number(form.dataset.index),values})});
+  const result=await response.json();if(!response.ok)throw Error(result.error||'Vérification impossible.');
+  if(!form.isConnected||currentSeries.code!==code||form.dataset.revision!==revision)return;
+  feedback.className='answer-feedback '+(result.correct?'answer-correct':'answer-retry');
+  feedback.innerHTML=`<strong>${result.correct?'✓ Tous les résultats saisis sont corrects.':'Certains résultats sont à revoir. Vous pouvez réessayer ou demander un indice.'}</strong><ul>${result.results.map(r=>`<li>${escapeHTML(r.message)}</li>`).join('')}</ul>`;
+  result.results.forEach(r=>form.elements.namedItem(r.key)?.setAttribute('aria-invalid',String(!r.correct)));
+ } catch(error) {
+  if(form.isConnected&&form.dataset.revision===revision)feedback.textContent='Impossible de vérifier : '+error.message;
+ } finally {button.disabled=false;}
+});
 function updateSolutions() {
  document.querySelectorAll('.exercise-solution').forEach((element,index)=>{
   if(showSolutions && !element.hasChildNodes()) {

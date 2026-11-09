@@ -7,6 +7,7 @@ import json
 import webbrowser
 from calculations import calculate, json_safe
 from exercises import generate_series
+from practice import check_answer
 
 ROOT = Path(__file__).resolve().parent / "dist"
 
@@ -29,7 +30,17 @@ class Handler(SimpleHTTPRequestHandler):
             if not isinstance(data, dict):
                 raise ValueError("Paramètres invalides.")
             operation = self.path.removeprefix("/api/")
-            response = json_safe(generate_series(data) if operation == "exercises" else calculate(operation, data))
+            if operation == "check-answer":
+                if not data.get("code"):
+                    raise ValueError("Numéro de série requis.")
+                series = generate_series({"code": data["code"]})
+                index = data.get("index")
+                if type(index) is not int or not 0 <= index < len(series["exercises"]):
+                    raise ValueError("Exercice invalide.")
+                response = check_answer(series["exercises"][index], data.get("values"))
+            else:
+                response = generate_series(data) if operation == "exercises" else calculate(operation, data)
+            response = json_safe(response)
             code = 200
         except (ValueError, TypeError, UnicodeError) as error:
             response, code = {"error": str(error)}, 400

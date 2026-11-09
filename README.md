@@ -44,7 +44,7 @@ Ouvrez **Les exercices** dans la navigation. Choisissez les thèmes, le niveau e
 
 Le thème **Équations de congruence** propose des équations ax ≡ b (mod n), avec inverse, simplification par le PGCD ou absence de solution, et un corrigé imprimable. Les anciens numéros de série conservent leurs exercices.
 
-Les difficultés changent la taille des nombres et introduisent des entiers négatifs dans certains exercices Défi. RSA reste scolaire ; la calculatrice est autorisée. Les indices progressifs et la vérification de réponses saisies ne sont pas encore inclus.
+Les difficultés changent la taille des nombres et introduisent des entiers négatifs dans certains exercices Défi. RSA reste scolaire ; la calculatrice est autorisée. Chaque exercice propose trois indices progressifs et une vérification des résultats saisis, champ par champ. Les coefficients de Bézout et les représentants modulaires équivalents sont acceptés. La vérification porte sur les résultats numériques, pas sur le raisonnement rédigé ni la factorisation détaillée. Les feuilles imprimées restent séparées de ces outils interactifs.
 
 Toutes les ressources (illustration, KaTeX, polices) sont locales. Aucun accès Internet n’est nécessaire après le téléchargement. Le serveur écoute uniquement sur votre ordinateur. Les entiers sont transmis au navigateur sous forme de chaînes pour préserver leur précision.
 
@@ -65,7 +65,7 @@ Toutes les ressources (illustration, KaTeX, polices) sont locales. Aucun accès 
 ## Vérifier
 
 ```powershell
-python -m unittest test_calculations test_exercises -v
+python -m unittest test_calculations test_exercises test_practice -v
 ```
 
 Le contrôle de la génération des feuilles et de leur complexité s’exécute avec `node test_print.cjs` (Node.js est nécessaire uniquement pour ce test).
